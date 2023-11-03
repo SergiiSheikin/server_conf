@@ -1,14 +1,5 @@
 #!/bin/bash
-
-# Ім'я юзера
-read -p "Введіье ім'я користувача: " username
-# Пароль юзера
-read -s -p "Введіть пароль користувача: " password
-
-# Ввести IP-адресу для статики
-read -p "Введіть IP-адресу сервера: " IPADDR
-read -p "Введіть PREFIX: " PREFIX
-read -p "Введіть GATEWAY: " GATEWAY
+source .env
 
 # Отключити SELinux
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
@@ -70,12 +61,12 @@ systemctl enable asterisk
 systemctl start asterisk
 
 # Створюємо користувача із заданим ім'ям та паролем
-useradd -m -s /bin/bash "$username"
-echo "$username:$password" | chpasswd
+useradd -m -s /bin/bash "$USERNAME"
+echo "$USERNAME:$PASSWORD" | chpasswd
 
 # Додаємо налаштування SSH до конфігураційного файлу
 echo "PermitRootLogin no" >> /etc/ssh/sshd_config
-echo "AllowUsers $username" >> /etc/ssh/sshd_config
+echo "AllowUsers $USERNAME" >> /etc/ssh/sshd_config
 
 echo "Налаштування завершено."
 
