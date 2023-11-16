@@ -1,7 +1,6 @@
 Centos7 minimal > http://mirror.lanet.network/centos/7.9.2009/isos/x86_64/CentOS-7-x86_64-Minimal-2009.iso
-
-epel-release -> містить пакети додаткового програмного забезпечення для Linux. 
-                Пакети цього репозиторію не конфліктують з пакетами RHEL, 
-                тому цей репозиторій є найбезпечнішим у використанні для CentOS.
-
-gcc gcc-c++ libedit-devel sqlite-devel jansson-devel libxml2-devel libuuid-devel bzip2 patch newt-devel -> потрібно для збірки asterisk
+потрібно для збірки asterisk + freepbx
+lynx mariadb-server mariadb php php-mysql php-mbstring tftp-server \
+  httpd ncurses-devel sendmail sendmail-cf sox newt-devel libxml2-devel libtiff-devel \
+  audiofile-devel gtk2-devel subversion kernel-devel git php-process crontabs cronie \
+  cronie-anacron wget vim php-xml uuid-devel sqlite-devel net-tools gnutls-devel php-pear unixODBC mysql-connector-odbc
