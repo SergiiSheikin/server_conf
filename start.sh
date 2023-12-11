@@ -123,7 +123,7 @@ cd freepbx
 
 # Додавання користувача astuser та установка паролю
 useradd -m -s /bin/bash astuser
-echo "astuser:$PASSWORD" | chpasswd
+echo "$USERNAME:$PASSWORD" | chpasswd
 
 # Заборона входу по SSH як root
 sed -i 's/#PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
