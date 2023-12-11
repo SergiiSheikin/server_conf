@@ -19,8 +19,9 @@ service tftp
        flags                  = IPv4
 }
 systemctl restart xinetd
-mkdir /tftpboot
-chmod 777 /tftpboot
+далі создамо папки
+mkdir /tftpboot/{MAC}.cfg
+chmod 777 /tftpboot/{MAC}.cfg
 
 #fwconsole 
 #Contents of /etc/systemd/system/freepbx.service
@@ -54,3 +55,12 @@ logpath = /var/log/asterisk/freepbx_security.log
 # треба ще создати у папці файл /etc/fail2ban/filter.d/freepbx.conf
 # и вставити правила які будуть тут у файлу freepbx.conf
 #==========================================================
+
+# install python 3.9.10
+yum install gcc openssl-devel bzip2-devel libffi-devel zlib-devel
+wget https://www.python.org/ftp/python/3.9.16/Python-3.9.16.tgz 
+tar xzf Python-3.9.16.tgz
+cd Python-3.9.16 
+sudo ./configure --enable-optimizations 
+sudo make altinstall 
+rm Python-3.9.16.tgz   

@@ -1,7 +1,13 @@
 #!/bin/bash
-source .env
+# Завантаження змін з .env файлу
+if [ -f .env ]; then
+    source .env
+else
+    echo "Файл .env не знайдено. Заповніть його та спробуйте знову."
+    exit 1
+fi
 
-# Отключити SELinux
+# Відключити SELinux
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
 setenforce 0
 
@@ -23,7 +29,7 @@ systemctl disable NetworkManager
 yum -y update
 yum -y groupinstall core base "Development Tools"
 
-yum -y install lynx mariadb-server mariadb php php-mysql php-mbstring tftp-server \
+yum -y install mc lynx mariadb-server mariadb php php-mysql php-mbstring tftp-server \
   httpd ncurses-devel sendmail sendmail-cf sox newt-devel libxml2-devel libtiff-devel \
   audiofile-devel gtk2-devel subversion kernel-devel git php-process crontabs cronie \
   cronie-anacron wget vim php-xml uuid-devel sqlite-devel net-tools gnutls-devel php-pear unixODBC mysql-connector-odbc
@@ -92,10 +98,15 @@ ldconfig
 chkconfig asterisk off
 
 chown asterisk. /var/run/asterisk
+chmod 755 /var/run/asterisk
 chown -R asterisk. /etc/asterisk
+chmod -R 755 /etc/asterisk
 chown -R asterisk. /var/{lib,log,spool}/asterisk
+chmod -R 755 /var/{lib,log,spool}/asterisk
 chown -R asterisk. /usr/lib64/asterisk
+chmod -R 755 /usr/lib64/asterisk
 chown -R asterisk. /var/www/
+chmod -R 755 /var/www/
 
 sed -i 's/\(^upload_max_filesize = \).*/\120M/' /etc/php.ini
 sed -i 's/^\(User\|Group\).*/\1 asterisk/' /etc/httpd/conf/httpd.conf
@@ -110,6 +121,14 @@ cd freepbx
 ./start_asterisk start
 ./install -n
 
-echo "Налаштування завершено."
+# Додавання користувача astuser та установка паролю
+useradd -m -s /bin/bash astuser
+echo "astuser:$PASSWORD" | chpasswd
+
+# Заборона входу по SSH як root
+sed -i 's/#PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
+systemctl restart sshd
+
+echo "Інсталювання завершено."
 
 exit 0
