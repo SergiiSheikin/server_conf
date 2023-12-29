@@ -16,20 +16,20 @@
       DEVICE=enp0s3.30
       BOOTPROTO=none
       ONBOOT=yes
-      IPADDR=10.33.84.5
-      NETMASK=255.255.255.128
-      NETWORK=10.33.84.0
+      IPADDR='{{ VLAN30IPADDR }}'
+      NETMASK='{{ VLAN30NETMASK }}'
+      NETWORK='{{ VLAN30NETWORK }}'
       VLAN=yes
     dest: /etc/sysconfig/network-scripts/ifcfg-enp0s3.30
 
 - name: Create rule file for VLAN interface
   copy:
-    content: 'from 10.33.84.0/25 tab 1 priority 500'
+    content: 'from '{{ RULEVLAN }}' tab 1 priority 500'
     dest: /etc/sysconfig/network-scripts/rule-enp0s3.30
 
 - name: Create route file for VLAN interface
   copy:
-    content: 'default via 10.33.84.1 dev enp0s3.30 table 1'
+    content: 'default via '{{ ROUTVLAN }}' dev enp0s3.30 table 1'
     dest: /etc/sysconfig/network-scripts/route-enp0s3.30
 
 - name: Create sysctl override file

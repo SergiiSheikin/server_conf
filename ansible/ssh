@@ -1,2 +1,2 @@
 ssh-keygen -t rsa -b 2048
-ssh-copy-id root@10.33.85.209
+ssh-copy-id root@
