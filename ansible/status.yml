@@ -1,0 +1,50 @@
+---
+- name: Вивести інформацію
+  hosts: '{{ IPADDR }}'
+  become: yes
+  remote_user: root
+
+  vars_files:
+    - vars/main.yml
+  tasks:
+    - name: uptime
+      command: uptime
+      register: uptime_output
+    - debug: var=uptime_output.stdout_lines[0] 
+
+    - name: IP-адреси інтерфейсів enp0s3 та enp0s3.30
+      command: ip ad
+      register: ip_address_output
+    - debug:
+        var: item
+      loop:
+        - "{{ip_address_output.stdout_lines[6]}}"
+        - "{{ip_address_output.stdout_lines[12]}}"
+ 
+      
+    # - name: info hostnamectl
+    #   command: hostnamectl
+    #   register: hostnamectl_output
+    # - debug: var=hostnamectl_output.stdout_lines 
+
+    # - name: Status MariaDB
+    #   command: systemctl status mariadb
+    #   register: mariadb_status
+    # - debug: var=mariadb_status.stdout_lines[2] 
+
+    # - name: Status Apache (httpd)
+    #   command: systemctl status httpd
+    #   register: httpd_status
+    # - debug: var=httpd_status.stdout_lines[2]
+
+    # - name: Status Fail2Ban
+    #   command: systemctl status fail2ban
+    #   register: fail2ban_status
+    # - debug: var=fail2ban_status.stdout_lines[2]
+
+    # - name: Status FreePBX
+    #   command: systemctl status freepbx
+    #   register: freepbx_status
+    # - debug: var=freepbx_status.stdout_lines[2]
+
+

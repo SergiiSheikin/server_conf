@@ -1,0 +1,15 @@
+---
+- include_tasks: configure_network.yml
+- include_tasks: install_dependencies.yml
+- include_tasks: configure_mariadb_and_apache.yml
+- include_tasks: download_sources.yml
+- include_tasks: compile_dahdi_and_libpri.yml
+- include_tasks: install_asterisk.yml
+- include_tasks: set_asterisk_permissions.yml
+- include_tasks: configure_php_and_apache.yml
+- include_tasks: install_freepbx.yml
+- include_tasks: configure_tftp.yml
+- include_tasks: configure_fail2ban.yml
+- include_tasks: copy_logrotate.yml
+# - include_tasks: iptables.yml
+- include_tasks: configure_vlan.yml

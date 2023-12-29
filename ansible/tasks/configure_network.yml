@@ -1,0 +1,16 @@
+
+---
+- name: Replace BOOTPROTO in ifcfg-enp0s
+  replace:
+    path: /etc/sysconfig/network-scripts/ifcfg-enp0s3
+    regexp: 'BOOTPROTO="dhcp"'
+    replace: 'BOOTPROTO="none"'
+
+- name: Add IPADDR, PREFIX, and GATEWAY parameters to ifcfg-enp0s3
+  lineinfile:
+    path: /etc/sysconfig/network-scripts/ifcfg-enp0s3
+    line: "{{ item }}"
+  loop:
+    - "IPADDR={{ IPADDR }}"
+    - "PREFIX={{ PREFIX }}"
+    - "GATEWAY={{ GATEWAY }}"

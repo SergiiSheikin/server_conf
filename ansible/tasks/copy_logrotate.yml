@@ -1,0 +1,8 @@
+# tasks/copy_logrotate.yml
+
+---
+- name: Copy logrotate configuration for Asterisk
+  copy:
+    src: ./files/asterisk
+    dest: /etc/logrotate.d/asterisk
+    mode: '0644'

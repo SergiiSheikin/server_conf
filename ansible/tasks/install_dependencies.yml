@@ -1,0 +1,21 @@
+# tasks/install_dependencies.yml
+
+---
+- name: Update system packages
+  yum:
+    name: "*"
+    state: latest
+
+- name: Install the 'Development tools' package group
+  yum:
+    name: '@Development tools'
+    state: present
+
+- name: Install required packages
+  yum:
+    name: "{{ packages_required }}"
+    state: present
+
+- name: Install Console_Getopt using pear
+  command: pear install Console_Getopt
+

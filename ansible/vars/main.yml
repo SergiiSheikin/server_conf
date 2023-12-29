@@ -1,0 +1,61 @@
+# vars/main.yml
+
+USERNAME: 
+PASSWORD: 
+IPADDR: 10.33.85.209
+PREFIX: 24
+GATEWAY: 10.33.85.1
+VLAN30-IPADDR: 10.33.84.5
+VLAN30-NETMASK: 255.255.255.128
+VLAN30-NETWORK: 10.33.84.0
+mysql_pass: 
+asterisk_module:
+  - format_mp3
+  - BUILD_NATIVE
+  - CORE-SOUNDS-RU-WAV
+  - CORE-SOUNDS-RU-ULAW
+  - CORE-SOUNDS-RU-G722
+  - CORE-SOUNDS-RU-G729
+  - CORE-SOUNDS-RU-ALAW
+  - CORE-SOUNDS-RU-GSM
+  - EXTRA-SOUNDS-EN-WAV
+  - EXTRA-SOUNDS-EN-G722-
+  - EXTRA-SOUNDS-EN-GSM
+packages_required:
+  - mc
+  - lynx
+  - MySQL-python
+  - mariadb-server
+  - mariadb
+  - php
+  - php-mysql
+  - php-mbstring
+  - tftp-server
+  - xinetd
+  - httpd
+  - ncurses-devel
+  - sendmail
+  - sendmail-cf
+  - sox
+  - newt-devel
+  - libxml2-devel
+  - libtiff-devel
+  - audiofile-devel
+  - gtk2-devel
+  - subversion
+  - kernel-devel
+  - git
+  - php-process
+  - crontabs
+  - cronie
+  - cronie-anacron
+  - wget
+  - vim
+  - php-xml
+  - uuid-devel
+  - sqlite-devel
+  - net-tools
+  - gnutls-devel
+  - php-pear
+  - unixODBC
+  - mysql-connector-odbc

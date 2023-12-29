@@ -1,0 +1,34 @@
+# tasks/configure_tftp.yml
+
+---
+- name: Clear existing content of /etc/xinetd.d/tftp
+  shell: echo "" > /etc/xinetd.d/tftp
+
+- name: Configure TFTP in /etc/xinetd.d/tftp
+  blockinfile:
+    path: /etc/xinetd.d/tftp
+    block: |
+      service tftp
+      {
+          socket_type            = dgram
+          protocol               = udp
+          wait                   = yes
+          user                   = root
+          server                 = /usr/sbin/in.tftpd
+          server_args            = -s /tftpboot
+          disable                = no
+          per_source             = 11
+          cps                    = 100 2
+          flags                  = IPv4
+      }
+
+- name: Restart xinetd
+  systemd:
+    name: xinetd
+    state: restarted
+
+- name: Create folders and set permissions
+  file:
+    path: "/tftpboot/{MAC}.cfg/"
+    state: directory
+    mode: '0777'

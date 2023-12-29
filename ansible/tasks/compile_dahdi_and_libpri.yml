@@ -1,0 +1,75 @@
+# tasks/compile_dahdi_and_libpri.yml
+
+---
+- name: Extract dahdi-linux-complete
+  unarchive:
+    src: /usr/src/dahdi-linux-complete-current.tar.gz
+    dest: /usr/src
+    remote_src: yes
+    list_files: yes
+    owner: root
+    group: root
+
+- name: Extract libpri
+  unarchive:
+    src: /usr/src/libpri-1-current.tar.gz
+    dest: /usr/src
+    remote_src: yes
+    owner: root
+    group: root
+
+- name: Extract pjproject
+  unarchive:
+    src: /usr/src/2.4.tar.gz
+    dest: /usr/src
+    remote_src: yes
+    owner: root
+    group: root
+
+- name: Extract jansson
+  unarchive:
+    src: /usr/src/jansson.tar.gz
+    dest: /usr/src
+    remote_src: yes
+    owner: root
+    group: root
+
+- name: Compile and install dahdi-linux-complete
+  shell: '{{ item }}'
+  args:
+    chdir: /usr/src/dahdi-linux-complete-3.2.0+3.2.0
+  with_items:
+    - make all
+    - make install
+    - make config
+  
+- name: Compile and install libpri
+  shell: '{{ item }}'
+  args:
+    chdir: /usr/src/libpri-1.6.1
+  with_items:
+    - make
+    - make install
+
+- name: Compile and install pjproject
+  shell: '{{ item }}'
+  args:
+    chdir: /usr/src/pjproject-2.4
+  environment:
+    CFLAGS: '-DPJ_HAS_IPV6=0'
+  with_items:
+    - ./configure --prefix=/usr --enable-shared --disable-sound --disable-resample --disable-video --disable-opencore-amr --libdir=/usr/lib64
+    - make dep
+    - make
+    - make install
+  
+- name: Compile and install jansson
+  shell: '{{ item }}'
+  args:
+    chdir: /usr/src/jansson-2.7
+  with_items:
+    - autoreconf -i
+    - ./configure --libdir=/usr/lib64
+    - make
+    - make install
+

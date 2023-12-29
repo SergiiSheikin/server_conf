@@ -1,0 +1,42 @@
+# tasks/download_sources.yml
+
+---
+- name: Download dahdi-linux-complete
+  copy:
+    src: ./files/dahdi-linux-complete-current.tar.gz
+    dest: /usr/src/
+  # get_url:
+  #   url: http://downloads.asterisk.org/pub/telephony/dahdi-linux-complete/dahdi-linux-complete-current.tar.gz
+  #   dest: /usr/src/dahdi-linux-complete-current.tar.gz
+
+- name: Download libpri
+  copy:
+    src: ./files/libpri-1-current.tar.gz
+    dest: /usr/src/
+  # get_url:
+  #   url: http://downloads.asterisk.org/pub/telephony/libpri/libpri-1-current.tar.gz
+  #   dest: /usr/src/libpri-1-current.tar.gz
+
+- name: Download Asterisk
+  copy:
+    src: ./files/asterisk-13.8.1.tar.gz
+    dest: /usr/src/
+  # get_url:
+  #   url: https://downloads.asterisk.org/pub/telephony/asterisk/old-releases/asterisk-13.38.3.tar.gz
+  #   dest: /usr/src/asterisk-13.38.3.tar.gz
+
+- name: Download jansson
+  copy:
+    src: ./files/jansson.tar.gz
+    dest: /usr/src/
+  # get_url:
+  #   url: https://github.com/akheron/jansson/archive/v2.7.tar.gz
+  #   dest: /usr/src/jansson.tar.gz
+
+- name: Download pjproject
+  copy:
+    src: files/2.4.tar.gz
+    dest: /usr/src/
+  # get_url:
+  #   url: https://github.com/pjsip/pjproject/archive/refs/tags/2.4.tar.gz
+  #   dest: /usr/src/pjproject-2.4.tar.gz

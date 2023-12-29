@@ -1,0 +1,10 @@
+# tasks/create_asterisk_user.yml
+
+---
+- name: Create Asterisk user
+  become: true
+  become_method: sudo
+  user:
+    name: asterisk
+    comment: "Asterisk User"
+    createhome: yes

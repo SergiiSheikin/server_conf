@@ -1,0 +1,37 @@
+# tasks/set_asterisk_permissions.yml
+
+---
+- name: Create Asterisk user
+  become: true
+  become_method: sudo
+  user:
+    name: asterisk
+    comment: "Asterisk User"
+    createhome: yes
+    
+- name: Set ownership and permissions for Asterisk directories
+  file:
+    path: "{{ item.path }}"
+    owner: asterisk
+  loop:
+    - { path: '/var/run/asterisk' }
+    - { path: '/etc/asterisk', recurse: true }
+    - { path: '/var/lib/asterisk', recurse: true }
+    - { path: '/var/log/asterisk', recurse: true }
+    - { path: '/var/spool/asterisk', recurse: true }
+    - { path: '/usr/lib64/asterisk', recurse: true }
+    - { path: '/var/www', recurse: true }
+
+- name: Set permissions for Asterisk directories
+  file:
+    path: "{{ item.path }}"
+    mode: "{{ item.permissions }}"
+  loop:
+    - { path: '/var/run/asterisk', permissions: '755' }
+    - { path: '/etc/asterisk', permissions: '755', recurse: true }
+    - { path: '/var/lib/asterisk', permissions: '755', recurse: true }
+    - { path: '/var/log/asterisk', permissions: '755', recurse: true }
+    - { path: '/var/spool/asterisk', permissions: '755', recurse: true }
+    - { path: '/usr/lib64/asterisk', permissions: '755', recurse: true }
+    - { path: '/var/www', permissions: '755', recurse: true }
+

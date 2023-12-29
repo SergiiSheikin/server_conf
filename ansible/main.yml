@@ -1,0 +1,45 @@
+---
+- name: update and install dependencies
+  hosts: '{{ IPADDR }}'
+  become: yes
+  remote_user: root
+
+  vars_files:
+    - vars/main.yml
+
+  tasks:
+    - include_tasks: tasks/disable.yml
+    - include_tasks: tasks/configure_network.yml
+    - include_tasks: tasks/install_dependencies.yml
+
+    - name: reboot
+      command: 'reboot'
+      async: 1
+      poll: 0
+      ignore_errors: true
+
+    - name: Wait for server to restart
+      local_action:
+        module: wait_for
+          host='{{ IPADDR }}'
+          port=22
+          delay=10
+      become: false
+      
+    - include_tasks: tasks/configure_mariadb_and_apache.yml
+    - include_tasks: tasks/download_sources.yml
+    - include_tasks: tasks/compile_dahdi_and_libpri.yml
+    - include_tasks: tasks/install_asterisk.yml
+    - include_tasks: tasks/set_asterisk_permissions.yml
+    - include_tasks: tasks/configure_php_and_apache.yml
+    - include_tasks: tasks/install_freepbx.yml
+    - include_tasks: tasks/configure_tftp.yml
+    - include_tasks: tasks/configure_fail2ban.yml
+    - include_tasks: tasks/copy_logrotate.yml
+    # - include_tasks: tasks/iptables.yml
+    - include_tasks: tasks/configure_vlan.yml      
+
+
+
+
+

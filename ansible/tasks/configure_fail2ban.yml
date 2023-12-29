@@ -1,0 +1,85 @@
+# tasks/configure_fail2ban.yml
+
+---
+
+- name: Install epel-release 
+  yum:
+    name:
+      - epel-release
+    state: latest
+
+- name: Install fail2ban
+  yum:
+    name:
+      - fail2ban
+    state: latest
+
+- name: Copy fail2ban configuration
+  shell: cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+
+- name: Enable IP whitelist in fail2ban
+  replace:
+    path: /etc/fail2ban/jail.local
+    regexp: '^#ignoreip = 127.0.0.1\/8 ::1'
+    replace: 'ignoreip = 127.0.0.1/8 ::1'
+
+- name: Enable fail2ban for specified services
+  loop:
+    - "asterisk"
+    - "sshd"
+    # - "apache-auth"
+    # - "apache-badbots"
+    # - "apache-botsearch"
+    # - "apache-fakegooglebot"
+    # - "apache-modsecurity"
+    # - "apache-nohome"
+    # - "apache-noscript"
+    # - "apache-overflows"
+    # - "apache-shellshock"
+    # - "mysqld-auth"
+    # - "php-url-fopen"
+  command: "sed -i '/^\\[{{ item }}\\]$/a enabled = yes' /etc/fail2ban/jail.local"
+
+
+- name: Configure messages in asterisk logger
+  lineinfile:
+    path: /etc/asterisk/logger_logfiles_custom.conf
+    line: "messages => debug,error,notice,verbose,warning"
+
+- name: Add FreePBX settings to jail.local
+  blockinfile:
+    path: /etc/fail2ban/jail.local
+    block: |
+      [freepbx]
+      enabled = yes
+      port = http
+      logpath = /var/log/asterisk/freepbx_security.log
+
+- name: Create freepbx.conf filter file
+  copy:
+    src: ./files/freepbx.conf
+    dest: /etc/fail2ban/filter.d/freepbx.conf
+
+- name: Create messages files
+  file:
+    path: /var/log/asterisk/messages
+    state: touch
+    owner: asterisk
+    group: asterisk
+
+- name: Create freepbx log files
+  file:
+    path: /var/log/asterisk/freepbx_security.log
+    state: touch
+    owner: asterisk
+    group: asterisk
+
+- name: Restart fail2ban service
+  systemd:
+    name: fail2ban
+    state: restarted
+
+- name: Enable fail2ban service at boot
+  systemd:
+    name: fail2ban
+    enabled: yes

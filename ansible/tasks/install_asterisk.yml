@@ -1,0 +1,41 @@
+# tasks/install_asterisk.yml
+
+---
+
+- name: Extract Asterisk
+  unarchive:
+    src: /usr/src/asterisk-13.8.1.tar.gz
+    dest: /usr/src
+    remote_src: yes
+
+- name: Asterisk configure
+  shell: '{{ item }}'
+  args:
+    chdir: /usr/src/asterisk-13.8.1
+  with_items:
+    - contrib/scripts/install_prereq install
+    - ./configure --libdir=/usr/lib64
+    - contrib/scripts/get_mp3_source.sh
+
+- name: Run menuselect for Asterisk
+  command: '{{ item }}'
+  args:
+    chdir: /usr/src/asterisk-13.8.1
+  with_items:
+    - make menuselect.makeopts
+    - menuselect/menuselect --enable {{ asterisk_module | join(' --enable' )}}
+
+- name: Compile and install Asterisk
+  shell: '{{ item }}'
+  args:
+    chdir: /usr/src/asterisk-13.8.1
+  with_items:
+    - make
+    - make install
+    - make config
+
+- name: Run ldconfig
+  command: ldconfig
+
+- name: Disable Asterisk at startup
+  command: chkconfig asterisk off

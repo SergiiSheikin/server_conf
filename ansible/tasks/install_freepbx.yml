@@ -1,0 +1,44 @@
+# tasks/install_freepbx.yml
+
+---
+- name: Download FreePBX
+  copy:
+    src: ./files/freepbx-13.0-latest.tgz
+    dest: /usr/src/
+  # command: wget http://mirror.freepbx.org/modules/packages/freepbx/freepbx-13.0-latest.tgz
+
+- name: Extract FreePBX
+  unarchive:
+    src: /usr/src/freepbx-13.0-latest.tgz
+    dest: /usr/src
+    remote_src: yes
+    list_files: yes
+    owner: root
+    group: root
+
+- name: Start FreePBX
+  shell: '{{ item }}' 
+  args:
+    chdir: /usr/src/freepbx
+  with_items:
+    - ./start_asterisk start
+    - ./install -n
+
+- name: Copy FreePBX service file
+  copy:
+    src: ./files/freepbx.service
+    dest: /etc/systemd/system/freepbx.service
+
+- name: Reload systemd configuration
+  systemd:
+    daemon_reload: yes
+
+- name: Start FreePBX service
+  systemd:
+    name: freepbx
+    state: started
+
+- name: Enable FreePBX service at boot
+  systemd:
+    name: freepbx
+    enabled: yes

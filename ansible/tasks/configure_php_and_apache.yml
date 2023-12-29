@@ -1,0 +1,35 @@
+# tasks/configure_php_and_apache.yml
+
+---
+- name: Set upload_max_filesize in php.ini
+  lineinfile:
+    path: /etc/php.ini
+    regexp: '^(upload_max_filesize = )'
+    line: 'upload_max_filesize = 120M'
+    
+- name: Set User in httpd.conf
+  replace:
+    dest: /etc/httpd/conf/httpd.conf
+    regexp: '^(\s*)User\s+\S+'
+    replace: '\1User asterisk'
+    backup: yes
+
+- name: Set Group in httpd.conf
+  replace:
+    dest: /etc/httpd/conf/httpd.conf
+    regexp: '^(\s*)Group\s+\S+'
+    replace: '\1Group asterisk'
+    backup: yes
+
+- name: Update AllowOverride in httpd.conf
+  replace:
+    dest: /etc/httpd/conf/httpd.conf
+    regexp: '^(\s*)AllowOverride\s+\S+'
+    replace: '\1AllowOverride All'
+    backup: yes
+
+- name: Restart Apache service
+  systemd:
+    name: httpd
+    state: restarted
+

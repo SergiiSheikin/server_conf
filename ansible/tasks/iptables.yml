@@ -1,0 +1,70 @@
+# tasks/iptables.yml
+
+---
+# - name: Install iptables
+#   yum:
+#     name:
+#       - iptables
+#       - iptables-services
+#     state: latest
+
+# - name: Flush current rules
+#   iptables:
+#     chain: "{{ item }}"
+#     state: absent
+#   loop:
+#     - INPUT
+#     - FORWARD
+#     - OUTPUT
+
+- name: Set default rules
+  shell: '{{ item }}'
+  with_items:
+    - iptables -F
+    - iptables -A INPUT -i lo -j ACCEPT
+    - iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+    - iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+    - iptables -P INPUT DROP
+    - iptables -P FORWARD DROP
+    - iptables -P OUTPUT DROP    
+    - iptables -A INPUT -p icmp --icmp-type 8 -j ACCEPT
+    - iptables -A OUTPUT -p icmp --icmp-type 8 -j ACCEPT
+    - iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+    - iptables -A INPUT -p tcp --dport 8080 -j ACCEPT
+    - iptables -A INPUT -p udp -m udp --dport 5060 -j ACCEPT
+    - iptables -A INPUT -p udp -m udp --dport 69 -j ACCEPT
+    - iptables -A INPUT -p udp -m udp --dport 10000:20000 -j ACCEPT
+    - service iptables save
+  # ignore_errors: yes
+
+# - name: Allow loopback traffic
+#   command: iptables -A INPUT -i lo -j ACCEPT
+#   # ignore_errors: yes
+
+# - name: Allow SSH for the network 10.33.85.0/24
+#   command: iptables -A INPUT -s 10.33.85.0/24 -p tcp --dport 22 -j ACCEPT
+#   # ignore_errors: yes
+
+# - name: Allow ICMP (ping) for the network 10.33.85.0/24
+#   command: iptables -A INPUT -s 10.33.85.0/24 -p icmp --icmp-type 8 -j ACCEPT
+#   # ignore_errors: yes
+
+# - name: Allow HTTP for the network 10.33.85.0/24
+#   command: iptables -A INPUT -s 10.33.85.0/24 -p tcp --dport 80 -j ACCEPT
+#   # ignore_errors: yes
+
+# - name: Allow similar rules for the network 10.33.84.0/25
+#   command: iptables -A INPUT -s 10.33.84.0/25 -p tcp --dport 22 -j ACCEPT
+#   # ignore_errors: yes
+
+# - name: Allow SIP and RTP traffic from any network
+#   command: iptables -A INPUT -p udp -m udp --dport 5060 -j ACCEPT
+#   # ignore_errors: yes
+
+# - name: Set default policies (DROP for INPUT and FORWARD, ACCEPT for OUTPUT)
+#   command: iptables -P INPUT DROP
+#   # ignore_errors: yes
+
+- name: Restart iptables service
+  command: systemctl restart iptables
+  # ignore_errors: yes

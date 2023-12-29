@@ -1,0 +1,45 @@
+# tasks/configure_mariadb_and_apache.yml
+
+---
+- name: Enable and start MariaDB service
+  systemd:
+    name: mariadb
+    state: started
+    enabled: yes
+
+- name: Run mysql_secure_installation
+  mysql_user:
+    login_user: "root"
+    login_password: ""
+    name: "root"
+    password: ""
+    priv: "*.*:ALL,GRANT"
+    host: "localhost"
+
+- name: Delete anonimous user for localhost
+  mysql_user:
+    login_user: "root"
+    login_password: ""
+    user: ""
+    host: "localhost"
+    state: "absent"
+
+- name: Delete anonimous user
+  mysql_user:
+    login_user: "root"
+    login_password: ""
+    user: ""
+    state: "absent"
+
+- name: Delete TEST db
+  mysql_db:
+    login_user: "root"
+    login_password: ""
+    db: "test"
+    state: "absent"
+
+- name: Enable and start Apache service
+  systemd:
+    name: httpd
+    state: started
+    enabled: yes
